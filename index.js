@@ -3,7 +3,7 @@ class DropDown extends HTMLElement {
         super();
 
         let index = this;
-        let getAttr = (attr, or) => this.getAttribute(attr) || or;
+        let getAttr = (attr, or) => this.getAttribute(attr) || or; // easily access self attributes or replace with a default
         let attr = {
             open : getAttr("open", "false").toLowerCase() === "true",
             event : getAttr("event", "hover"),
@@ -16,11 +16,16 @@ class DropDown extends HTMLElement {
         let height = content.getBoundingClientRect().height;
         let width = content.getBoundingClientRect().width;
 
-        content.style.position = "relative";
+        content.style.position = "relative"; // make content relocateable
 
         let open;
-        let close;
-
+        let close; // pre define open and close functions to reach the scopes necesssary
+        
+        /*
+            Create appropriate open and close functions depending on desired animation
+            
+            Set default values depending on open attribute
+        */
         switch(attr.appear) {
             case "slide-down" :
                 open = () => content.animate([
@@ -198,8 +203,13 @@ class DropDown extends HTMLElement {
                     content.style.display = "none";
                 }
             break;
+            default :
+                throw "Please assign a valid appear attribute for your drop-down element";
         }
-
+        
+        /*
+            Attach the appropriate event handlers to activate the open and close functions
+        */
         switch(attr.event) {
             case "hover" :
                 this.addEventListener("mouseleave", close);
@@ -218,9 +228,9 @@ class DropDown extends HTMLElement {
                 });
             break;
             default :
-                throw "Please assign a valid event type for your drop-down element";
+                throw "Please assign a valid event attribute for your drop-down element";
         }
     }
 }
 
-customElements.define('drop-down', DropDown);
+customElements.define('drop-down', DropDown); // add the element to the custom elements registry
